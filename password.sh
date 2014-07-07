@@ -1,6 +1,6 @@
 #!/bin/bash
 
-option=${1-20}
+option=${1}
 
 cas=`echo $option | tr -dc a-c`
 casa=`echo $cas 2 | tr a 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
