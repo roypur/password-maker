@@ -10,6 +10,10 @@ casc=`echo $cas 2 | tr c 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 
 toption=`echo $option | tr -dc 0-9`
 toption=`echo a $toption | tr 0-9 1 | tr a 2 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
 
+#If $toption equals 1, then the passwordlength is specified.
+#If $toption equals 2, then the password length should default to 20 characters.
+
+
 passcas=`echo a-zA-Z0-9`
 
 
