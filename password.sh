@@ -7,6 +7,23 @@ casa=`echo $cas 2 | tr a 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 
 casb=`echo $cas 2 | tr b 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
 casc=`echo $cas 2 | tr c 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
 
+toption=`echo $option | tr -dc 0-9`
+toption=`echo a $toption a | tr 0-9 1 | tr a 2 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
+
+passcas=`echo a-zA-Z0-9`
+
+
+if [ $toption -eq 1 ]
+then
+    length=`echo $option | tr -dc 0-9`
+fi
+
+if [ $toption -eq 2 ]
+then
+    length=20
+fi
+
+
 if [ $casa -eq 1 ]
 then
     cas1=a-z
@@ -21,8 +38,6 @@ if [ $casc -eq 1 ]
 then
     cas3=0-9
 fi
-
-passcas=`echo a-zA-Z0-9`
 
 
 if [ $casa -eq 1 ]
@@ -47,19 +62,6 @@ casenumber=`echo $passcas | tr 0-9 1 | tr a-z 2 | tr A-Z 3 | grep -o . | sort -n
 #casenumber is a numerical value representing the characters in the password. a-z is 1, A-Z is 2 and 0-9 is 3.
 
 
-option=`echo $option | tr -dc 0-9`
-
-if [ $option -ge 1 ]
-then
-    length=`echo $option`
-fi
-
-
-if [ $option -ge 1 ]
-then
-    length=`echo $option`
-fi
-
 entropy=`expr 50 \* $length`
 echo ""
 
@@ -74,7 +76,7 @@ do
 
 #The password is made using tr and /dev/random.
 
-   if [ $option -lt 3 ]
+   if [ $length -lt 3 ]
    then
        echo $password
        echo ""
@@ -90,16 +92,18 @@ do
 #tr removes everything except 1, 2 and 3.
 
 
-
-   if [ $cases == $casenumber ]
+   if [ $length -gt 3 ]
    then
-       echo $password
-       echo ""
+       if [ $cases == $casenumber ]
+       then
+           echo $password
+           echo ""
+       fi
    fi
 #If the password contains upper-case, lower-case and numbers the password is shown.
 
 
-   if [ $option -lt 3 ]
+   if [ $length -lt 3 ]
    then
        cases=`echo $casenumber`
    fi
