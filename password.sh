@@ -8,7 +8,7 @@ casb=`echo $cas 2 | tr b 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 
 casc=`echo $cas 2 | tr c 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
 
 toption=`echo $option | tr -dc 0-9`
-toption=`echo a $toption a | tr 0-9 1 | tr a 2 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
+toption=`echo a $toption | tr 0-9 1 | tr a 2 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
 
 passcas=`echo a-zA-Z0-9`
 
