@@ -1,7 +1,59 @@
 #!/bin/bash
-length=10
-option=${1-10}
+
+option=${1-20}
+
+cas=`echo $option | tr -dc a-c`
+casa=`echo $cas 2 | tr a 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
+casb=`echo $cas 2 | tr b 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
+casc=`echo $cas 2 | tr c 1 | tr -dc 12 | grep -o . | sort -n | uniq | tr -dc 12 | head -c 1`
+
+if [ $casa -eq 1 ]
+then
+    cas1=a-z
+fi
+
+if [ $casb -eq 1 ]
+then
+    cas2=A-Z
+fi
+
+if [ $casc -eq 1 ]
+then
+    cas3=0-9
+fi
+
+passcas=`echo a-zA-Z0-9`
+
+
+if [ $casa -eq 1 ]
+then
+    passcas=`echo $cas1 $cas2 $cas3 | tr -dc a-zA-Z0-9-`
+fi
+
+if [ $casb -eq 1 ]
+then
+    passcas=`echo $cas1 $cas2 $cas3 | tr -dc a-zA-Z0-9-`
+fi
+
+if [ $casc -eq 1 ]
+then
+    passcas=`echo $cas1 $cas2 $cas3 | tr -dc a-zA-Z0-9-`
+fi
+
+#passcas is the characters the password should contain.
+
+casenumber=`echo $passcas | tr 0-9 1 | tr a-z 2 | tr A-Z 3 | grep -o . | sort -n | uniq | tr -dc 1-3`
+
+#casenumber is a numerical value representing the characters in the password. a-z is 1, A-Z is 2 and 0-9 is 3.
+
+
 option=`echo $option | tr -dc 0-9`
+
+if [ $option -ge 1 ]
+then
+    length=`echo $option`
+fi
+
 
 if [ $option -ge 1 ]
 then
@@ -14,17 +66,20 @@ echo ""
 cases=5
 #The cases variable is set to 5 to avoid errors beccause cases doesent exist. Any numerical value except 123 will do.
 
-until [ $cases -eq 123 ]
+
+until [ $cases -eq $casenumber ]
 do
-   password=`head -c $entropy /dev/random | tr -dc a-zA-Z0-9 | tail -c $length`
+   password=`head -c $entropy /dev/random | tr -dc $passcas | tail -c $length`
+
+
 #The password is made using tr and /dev/random.
 
-   if [ $option -lt 4 ]
+   if [ $option -lt 3 ]
    then
        echo $password
        echo ""
    fi
-#If the password is less than 4 characters the password is shown without checking that it contains numbers, upper-case and lower-case.
+#If the password is less than 3 characters the password is shown without checking that it contains numbers, upper-case and lower-case.
 
    cases=`echo $password | tr 0-9 1 | tr a-z 2 | tr A-Z 3 | grep -o . | sort -n | uniq | tr -dc 1-3`
 
@@ -33,18 +88,23 @@ do
 #sort sorts the numbers the numbers.
 #uniq removes duplicate lines.
 #tr removes everything except 1, 2 and 3.
-#If the command prints 123 the password contains all cases.
 
-   if [ $cases == 123 ]                     
+
+
+   if [ $cases == $casenumber ]
    then
        echo $password
        echo ""
    fi
 #If the password contains upper-case, lower-case and numbers the password is shown.
 
-   if [ $option -lt 4 ]
+
+   if [ $option -lt 3 ]
    then
-       cases=123
+       cases=`echo $casenumber`
    fi
-#If the password is less than 4 characters, cases are set to 123. This is to exit the loop if the password is short.
+#If the password is less than 3 characters, cases are set to the same as the passcas variable. This is to exit the loop if the password is short.
 done
+
+#The until statement keeps the script running until the password contains the specified characters.
+#If no characters are specified it keeps running until it contains upper-case, lower-case and numbers.
